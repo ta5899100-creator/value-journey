@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>価値観の旅</title>
+<meta property="og:title" content="価値観の旅">
+<meta property="og:description" content="言葉を選び、手放しながら、いまの自分を貫く5つの価値に出会う旅。">
+<style>
+  :root{
+    --ground:#E8ECEC;
+    --ground-2:#EEF1F0;
+    --ink:#1F262E;
+    --ink-soft:#535D66;
+    --accent:#2C5A78;
+    --accent-deep:#1E3F55;
+    --accent-wash:#D6E1E7;
+    --line:#C7CFD1;
+    --release:#A7B1B5;
+    --card:#F4F6F5;
+    --white:#FBFCFB;
+    --mincho:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho",serif;
+    --gothic:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--gothic);
+    color:var(--ink);
+    background:
+      radial-gradient(120% 80% at 50% -10%, var(--ground-2), var(--ground) 60%);
+    background-attachment:fixed;
+    min-height:100vh;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:28px 22px 96px;}
+
+  /* ---- header / progress ---- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    min-height:34px;margin-bottom:30px;
+  }
+  .back{
+    background:none;border:none;color:var(--ink-soft);
+    font-family:var(--gothic);font-size:14px;cursor:pointer;
+    padding:6px 4px;letter-spacing:.04em;opacity:.85;
+    transition:opacity .2s;
+  }
+  .back:hover{opacity:1}
+  .back[hidden]{visibility:hidden}
+  .kanji-track{display:flex;gap:9px;align-items:center}
+  .kanji-track span{
+    font-family:var(--mincho);font-size:15px;color:var(--line);
+    transition:color .4s, transform .4s;line-height:1;
+  }
+  .kanji-track span.done{color:var(--accent)}
+  .kanji-track span.now{color:var(--ink);transform:scale(1.25)}
+
+  /* ---- intro ---- */
+  .intro{text-align:center;padding-top:6vh;animation:rise .9s ease both}
+  .seal{
+    width:62px;height:62px;margin:0 auto 30px;border-radius:50%;
+    background:radial-gradient(circle at 38% 34%, #4A7D9B, var(--accent) 55%, var(--accent-deep));
+    box-shadow:0 10px 26px -12px rgba(28,63,85,.6);
+  }
+  .intro h1{
+    font-family:var(--mincho);font-weight:600;
+    font-size:clamp(30px,8vw,44px);line-height:1.5;
+    letter-spacing:.06em;margin:0 0 26px;
+  }
+  .lead{
+    font-size:15.5px;color:var(--ink-soft);line-height:2.1;
+    max-width:30em;margin:0 auto 40px;letter-spacing:.02em;
+  }
+  .lead em{font-style:normal;color:var(--accent-deep);font-weight:500}
+  .meta{
+    display:flex;justify-content:center;gap:0;
+    margin:0 auto 44px;max-width:380px;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .meta div{flex:1;padding:16px 6px;border-left:1px solid var(--line)}
+  .meta div:first-child{border-left:none}
+  .meta b{display:block;font-family:var(--mincho);font-size:21px;color:var(--ink);font-weight:600}
+  .meta small{display:block;font-size:11.5px;color:var(--ink-soft);margin-top:3px;letter-spacing:.08em}
+
+  /* ---- step head ---- */
+  .phase{
+    font-family:var(--mincho);font-size:14px;letter-spacing:.18em;
+    color:var(--accent);margin-bottom:18px;text-align:center;
+  }
+  .step-enter{animation:rise .55s ease both}
+  h2.title{
+    font-family:var(--mincho);font-weight:600;
+    font-size:clamp(22px,5.6vw,30px);line-height:1.6;
+    text-align:center;letter-spacing:.04em;margin:0 0 16px;
+  }
+  .sub{
+    text-align:center;color:var(--ink-soft);font-size:14px;
+    line-height:1.95;max-width:30em;margin:0 auto 30px;letter-spacing:.02em;
+  }
+
+  /* ---- counter ---- */
+  .counter{
+    text-align:center;font-size:13px;color:var(--ink-soft);
+    letter-spacing:.1em;margin:0 0 22px;
+  }
+  .counter b{
+    font-family:var(--mincho);font-size:19px;color:var(--ink);
+    margin:0 2px;transition:color .3s;
+  }
+  .counter.full b{color:var(--accent)}
+
+  /* ---- chips ---- */
+  .grid{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:14px}
+  .chip{
+    font-family:var(--gothic);font-size:15px;color:var(--ink);
+    background:var(--card);border:1px solid var(--line);
+    border-radius:999px;padding:9px 17px;cursor:pointer;
+    letter-spacing:.04em;line-height:1.4;min-height:42px;
+    transition:background .25s, color .25s, border-color .25s, transform .12s, opacity .25s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .chip:hover{border-color:var(--accent)}
+  .chip:active{transform:scale(.96)}
+  .chip.on{
+    background:var(--accent);border-color:var(--accent);color:#fff;
+    box-shadow:0 6px 16px -8px rgba(28,63,85,.7);
+  }
+  .chip.dim{opacity:.32;cursor:not-allowed}
+  .chip.dim:hover{border-color:var(--line)}
+  /* removal: faded = "色が抜ける" */
+  .chip.gone{
+    background:transparent;color:var(--release);border-color:transparent;
+    border-bottom:1px solid var(--release);border-radius:4px;
+    text-decoration:line-through;text-decoration-color:var(--release);
+    box-shadow:none;opacity:.7;
+  }
+
+  /* ---- transform groups ---- */
+  .tgroup{
+    background:var(--white);border:1px solid var(--line);border-radius:16px;
+    padding:18px 16px 16px;margin-bottom:14px;
+  }
+  .tgroup .from{
+    font-family:var(--mincho);font-size:16px;color:var(--ink-soft);
+    text-align:center;margin-bottom:4px;letter-spacing:.05em;
+  }
+  .tgroup .from b{color:var(--ink);font-weight:600}
+  .tgroup .arrow{text-align:center;color:var(--line);font-size:13px;margin:2px 0 12px}
+  .topts{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
+  .topts .chip{font-size:14.5px;padding:8px 15px;min-height:38px}
+
+  /* ---- result ---- */
+  .result{animation:rise .8s ease both}
+  .result .phase{margin-bottom:14px}
+  .result h2.title{margin-bottom:30px}
+  .values{display:flex;flex-direction:column;gap:12px;margin-bottom:40px}
+  .values .v{
+    font-family:var(--mincho);font-size:clamp(20px,5.5vw,26px);
+    text-align:center;letter-spacing:.1em;color:var(--ink);
+    padding:15px;border-bottom:1px solid var(--line);
+    animation:rise .6s ease both;
+  }
+  .values .v::before{
+    content:attr(data-n);font-family:var(--mincho);font-size:13px;
+    color:var(--accent);margin-right:14px;letter-spacing:0;vertical-align:.2em;
+  }
+  .promptlabel{
+    font-family:var(--mincho);font-size:14px;letter-spacing:.14em;
+    color:var(--accent);text-align:center;margin-bottom:8px;
+  }
+  .prompthint{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-bottom:14px}
+  textarea{
+    width:100%;min-height:230px;resize:vertical;
+    font-family:var(--gothic);font-size:13px;line-height:1.85;color:var(--ink);
+    background:var(--white);border:1px solid var(--line);border-radius:14px;
+    padding:16px;letter-spacing:.01em;
+  }
+  textarea:focus{outline:none;border-color:var(--accent)}
+
+  /* ---- footer / buttons ---- */
+  .footer{
+    position:fixed;left:0;right:0;bottom:0;
+    padding:16px 22px calc(16px + env(safe-area-inset-bottom));
+    background:linear-gradient(to top, var(--ground) 62%, rgba(232,236,236,0));
+    display:flex;justify-content:center;
+    pointer-events:none;
+  }
+  .btn{
+    pointer-events:auto;
+    font-family:var(--mincho);font-size:16px;letter-spacing:.16em;
+    color:#fff;background:var(--accent);border:none;border-radius:999px;
+    padding:15px 52px;cursor:pointer;
+    box-shadow:0 12px 28px -12px rgba(28,63,85,.75);
+    transition:background .25s, opacity .25s, transform .12s;
+  }
+  .btn:hover{background:var(--accent-deep)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{background:#B6C0C4;box-shadow:none;cursor:not-allowed;opacity:.85}
+  .btn.ghost{
+    background:transparent;color:var(--accent);
+    box-shadow:none;border:1px solid var(--accent);padding:13px 30px;font-size:14px;
+  }
+  .btn.ghost:hover{background:var(--accent-wash)}
+  .btnrow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;pointer-events:auto}
+
+  .copied{
+    position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(10px);
+    background:var(--ink);color:#fff;font-size:13px;letter-spacing:.08em;
+    padding:9px 20px;border-radius:999px;opacity:0;pointer-events:none;
+    transition:opacity .3s, transform .3s;
+  }
+  .copied.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  @media (max-width:480px){
+    .wrap{padding:22px 16px 96px}
+    .chip{font-size:14px;padding:8px 14px}
+    .grid{gap:8px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="footer" id="footer"></div>
+<div class="copied" id="copied">コピーしました</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ===== 言葉のプール ===== */
+  const PLUS = ["愛","慈しみ","思いやり","共感","優しさ","寛容","受容","許し","感謝","信頼","誠実","正直","真心","礼儀","敬意","尊重","謙虚","素直","仁","和","絆","つながり","家族","友情","仲間","居場所","帰属","共同体","分かち合い","貢献","奉仕","支援","応援","励まし","育成","導き","影響","リーダーシップ","勇気","挑戦","冒険","冒険心","行動","決断","意志","主体性","自立","独立","自由","解放","自律","規律","責任","忍耐","粘り強さ","継続","努力","勤勉","集中","没頭","フロー","探究","好奇心","学び","知恵","洞察","直感","工夫","創造","表現","芸術","美","感性","物語","言葉","音楽","ひらめき","想像","革新","専門性","熟達","才能","達成","成長","向上","改善","成功","豊かさ","繁栄","余裕","寛大さ","健康","活力","元気","しなやかさ","回復力","安定","安心","安全","平和","平穏","穏やか","静けさ","落ち着き","ゆとり","余白","軽やかさ","解き放ち","喜び","楽しさ","遊び心","ユーモア","笑顔","ときめき","感動","驚き","充実","満足","幸福","安寧","希望","夢","理想","志","目的","意味","使命","ビジョン","本質","真実","本物","自分らしさ","個性","純粋","凛とした","気品","品格","誇り","自尊","自信","自己受容","自己理解","境界線","選択","今ここ","内省","静寂","マインドフルネス","瞑想","自然","光","風","旅","発見","探検","開拓","情熱","熱意","真剣","一歩","丁寧","温かさ","包容","慈悲","共生","調和","美意識","ひたむき","潔さ","凪"];
+
+  const MINUS = ["不安","恐れ","心配","焦り","緊張","過緊張","ストレス","疲労","燃え尽き","無力感","虚しさ","空虚","孤独","孤立","疎外感","見捨てられ不安","拒絶への恐れ","不信","猜疑","嫉妬","妬み","怒り","苛立ち","憤り","恨み","敵意","罪悪感","自責","後悔","恥","劣等感","自己否定","自己嫌悪","無価値感","完璧主義","強迫","執着","依存","支配欲","抑圧","我慢","諦め","無関心","倦怠","退屈","停滞","混乱","迷い","優柔不断","先延ばし","だるさ","散漫","過集中","衝動性","過敏","圧倒","麻痺","解離","比較","承認欲求","自意識過剰","悲しみ","喪失","傷つき"];
+
+  /* マイナスの反対側にある力（七・転換） */
+  const OPP = {
+    "不安":["安心","信頼","落ち着き"],"恐れ":["勇気","安心","一歩"],"心配":["信頼","ゆとり","今ここ"],
+    "焦り":["ゆとり","余白","今ここ"],"緊張":["落ち着き","凪","ゆとり"],"過緊張":["落ち着き","凪","解き放ち"],
+    "ストレス":["ゆとり","静けさ","回復力"],"疲労":["回復力","活力","ゆとり"],"燃え尽き":["回復力","余白","活力"],
+    "無力感":["主体性","自信","一歩"],"虚しさ":["意味","充実","つながり"],"空虚":["意味","充実","喜び"],
+    "孤独":["つながり","絆","居場所"],"孤立":["つながり","仲間","居場所"],"疎外感":["帰属","居場所","共感"],
+    "見捨てられ不安":["信頼","安心","絆"],"拒絶への恐れ":["自己受容","勇気","信頼"],"不信":["信頼","安心","誠実"],
+    "猜疑":["信頼","落ち着き","寛容"],"嫉妬":["自己受容","感謝","寛容"],"妬み":["感謝","自己受容","充実"],
+    "怒り":["平穏","受容","寛容"],"苛立ち":["落ち着き","ゆとり","寛容"],"憤り":["平穏","受容","落ち着き"],
+    "恨み":["許し","平穏","解放"],"敵意":["寛容","平和","思いやり"],"罪悪感":["自己受容","許し","慈しみ"],
+    "自責":["自己受容","許し","慈しみ"],"後悔":["受容","今ここ","許し"],"恥":["自己受容","自尊","誇り"],
+    "劣等感":["自尊","自信","自己受容"],"自己否定":["自己受容","自尊","自信"],"自己嫌悪":["自己受容","慈しみ","許し"],
+    "無価値感":["自尊","自己受容","貢献"],"完璧主義":["しなやかさ","受容","ゆとり"],"強迫":["自由","落ち着き","解放"],
+    "執着":["解放","受容","軽やかさ"],"依存":["自立","主体性","自由"],"支配欲":["信頼","寛容","受容"],
+    "抑圧":["表現","解放","自由"],"我慢":["境界線","表現","自由"],"諦め":["希望","一歩","意志"],
+    "無関心":["好奇心","情熱","共感"],"倦怠":["好奇心","ときめき","遊び心"],"退屈":["好奇心","遊び心","冒険心"],
+    "停滞":["成長","一歩","行動"],"混乱":["落ち着き","静けさ","集中"],"迷い":["決断","志","直感"],
+    "優柔不断":["決断","意志","行動"],"先延ばし":["一歩","行動","集中"],"だるさ":["活力","一歩","元気"],
+    "散漫":["集中","今ここ","落ち着き"],"過集中":["ゆとり","余白","境界線"],"衝動性":["落ち着き","内省","自律"],
+    "過敏":["落ち着き","静けさ","境界線"],"圧倒":["余白","落ち着き","一歩"],"麻痺":["感性","活力","今ここ"],
+    "解離":["今ここ","安心","つながり"],"比較":["自分らしさ","自己受容","感謝"],"承認欲求":["自己受容","自尊","自分らしさ"],
+    "自意識過剰":["落ち着き","自己受容","今ここ"],"悲しみ":["慈しみ","受容","希望"],"喪失":["受容","感謝","希望"],"傷つき":["回復力","慈しみ","安心"]
+  };
+
+  const KANJI=["一","二","三","四","五","六","七","八"];
+
+  /* ===== 状態 ===== */
+  function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+  const PLUS_VIEW=shuffle(PLUS);
+  const MINUS_VIEW=shuffle(MINUS);
+
+  const S={
+    screen:"intro", step:1,
+    plusSel:new Set(), rm2:new Set(), rm3:new Set(), rm4:new Set(),
+    minusSel:new Set(), rm6:new Set(), trans:{}, finalSel:new Set(),
+    sig:{}
+  };
+
+  /* 出力プール計算 */
+  const ordPlus = set => PLUS.filter(w=>set.has(w));
+  const ordMinus = set => MINUS.filter(w=>set.has(w));
+  function pool1(){return ordPlus(S.plusSel);}
+  function pool2(){return pool1().filter(w=>!S.rm2.has(w));}
+  function pool3(){return pool2().filter(w=>!S.rm3.has(w));}
+  function positiveCore(){return pool3().filter(w=>!S.rm4.has(w));}
+  function minus10(){return ordMinus(S.minusSel);}
+  function minusCore(){return minus10().filter(w=>!S.rm6.has(w));}
+  function desired(){return minusCore().map(w=>S.trans[w]).filter(Boolean);}
+  function pool8(){const seen=new Set();const out=[];[...positiveCore(),...desired()].forEach(w=>{if(!seen.has(w)){seen.add(w);out.push(w);}});return out;}
+  function coreValues(){return pool8().filter(w=>S.finalSel.has(w));}
+
+  /* ステップ毎の集合をクリア（下流リセット用） */
+  function clearStep(k){
+    ({1:()=>S.plusSel.clear(),2:()=>S.rm2.clear(),3:()=>S.rm3.clear(),4:()=>S.rm4.clear(),
+      5:()=>S.minusSel.clear(),6:()=>S.rm6.clear(),7:()=>{S.trans={};},8:()=>S.finalSel.clear()})[k]();
+  }
+  function resetFrom(k){for(let i=k+1;i<=8;i++)clearStep(i);}
+  function sigOf(s){
+    const map={1:pool1,2:pool2,3:pool3,4:positiveCore,5:minus10,6:minusCore,7:desired};
+    return (map[s]?map[s]():[]).slice().sort().join("|");
+  }
+
+  const app=document.getElementById("app");
+  const footer=document.getElementById("footer");
+
+  /* ===== 各ステップ設定 ===== */
+  const STEPS={
+    1:{phase:"一 ・ プラスのエネルギー",title:"心に響く言葉を、<br>20個えらぶ",sub:"いまの自分の中にある、あるいは持っていたいエネルギーを感じてみてください。急がなくて大丈夫です。",mode:"select",pool:()=>PLUS_VIEW,set:()=>S.plusSel,target:20,verb:"えらぶ"},
+    2:{phase:"二 ・ 手放す",title:"20個から5個を、<br>手放す",sub:"いま、どうしても必要というわけではない言葉から、そっと手を離してみましょう。",mode:"remove",pool:pool1,set:()=>S.rm2,target:5},
+    3:{phase:"三 ・ さらに手放す",title:"15個から5個を、<br>さらに手放す",sub:"やさしくはないけれど、手放すほどに、より深いところの自分に出会えます。",mode:"remove",pool:pool2,set:()=>S.rm3,target:5},
+    4:{phase:"四 ・ 最後に手放す",title:"10個から5個を、<br>最後に手放す",sub:"残った5つが、いまこの瞬間の、あなたの核にあるエネルギーです。",mode:"remove",pool:pool3,set:()=>S.rm4,target:5},
+    5:{phase:"五 ・ マイナスのエネルギー",title:"越えたい言葉を、<br>10個えらぶ",sub:"いま自分を苦しめている、あるいは内側にあって手放したいエネルギー。背けず、見つめることが変化のはじまりです。",mode:"select",pool:()=>MINUS_VIEW,set:()=>S.minusSel,target:10,verb:"えらぶ"},
+    6:{phase:"六 ・ 課題を絞る",title:"10個から5個を、<br>手放す",sub:"いま、いちばん向き合いたい課題を5つだけ残してください。",mode:"remove",pool:minus10,set:()=>S.rm6,target:5},
+    7:{phase:"七 ・ 転換",title:"反対側から、<br>ひとつをえらぶ",sub:"そのマイナスを越えるために、あなたが本当に求めている力はどれですか。",mode:"transform"},
+    8:{phase:"八 ・ 最終選択",title:"いまの自分を<br>最もよく表す5個",sub:"最後まで残ったプラスと、欠落から望んだ方向。本当に響く5つを残してください。",mode:"select",pool:pool8,set:()=>S.finalSel,target:5,verb:"えらぶ"}
+  };
+
+  /* ===== レンダリング ===== */
+  function render(){
+    if(S.screen==="intro")return renderIntro();
+    if(S.screen==="result")return renderResult();
+    renderStep(S.step);
+  }
+
+  function topbar(){
+    const dots=KANJI.map((k,i)=>{
+      const n=i+1;let cls="";
+      if(S.screen==="result"||n<S.step)cls="done";
+      if(S.screen!=="result"&&n===S.step)cls="now";
+      return `<span class="${cls}">${k}</span>`;
+    }).join("");
+    const showBack=S.screen==="intro"?false:true;
+    return `<div class="topbar">
+      <button class="back" id="back" ${showBack?"":"hidden"}>← 戻る</button>
+      <div class="kanji-track">${dots}</div>
+    </div>`;
+  }
+
+  function renderIntro(){
+    app.innerHTML=`
+      <div class="intro">
+        <div class="seal"></div>
+        <h1>私は、<br>どんな人か</h1>
+        <p class="lead">200ほどの言葉の中から、えらび、また手放しながら、<em>いまの自分を貫くエネルギー</em>に出会う旅です。<br><br>急がなくて大丈夫。<br>感じるままに、ひかれるままに進んでみてください。</p>
+        <div class="meta">
+          <div><b>八</b><small>ステップ</small></div>
+          <div><b>10〜20</b><small>分ほど</small></div>
+          <div><b>五</b><small>核心の価値</small></div>
+        </div>
+      </div>`;
+    footer.innerHTML=`<button class="btn" id="start">旅を始める</button>`;
+    document.getElementById("start").onclick=()=>{S.screen="step";S.step=1;scrollTop();render();};
+  }
+
+  function renderStep(n){
+    const c=STEPS[n];
+    let body="";
+    if(c.mode==="select"||c.mode==="remove"){
+      const words=c.pool();
+      const set=c.set();
+      const isSel=c.mode==="select";
+      const cnt=isSel?set.size:set.size;
+      body=`
+        ${topbar()}
+        <div class="step-enter">
+          <div class="phase">${c.phase}</div>
+          <h2 class="title">${c.title}</h2>
+          <p class="sub">${c.sub}</p>
+          <div class="counter ${cnt===c.target?"full":""}" id="counter">
+            ${isSel?"えらぶ":"手放す"} <b>${cnt}</b> / ${c.target}
+          </div>
+          <div class="grid" id="grid">
+            ${words.map(w=>{
+              const active=set.has(w);
+              let cls="chip";
+              if(isSel){ if(active)cls+=" on"; else if(set.size>=c.target)cls+=" dim"; }
+              else { if(active)cls+=" gone"; else if(set.size>=c.target)cls+=" dim"; }
+              return `<button class="${cls}" data-w="${w}" aria-pressed="${active}">${w}</button>`;
+            }).join("")}
+          </div>
+        </div>`;
+    } else if(c.mode==="transform"){
+      const list=minusCore();
+      body=`
+        ${topbar()}
+        <div class="step-enter">
+          <div class="phase">${c.phase}</div>
+          <h2 class="title">${c.title}</h2>
+          <p class="sub">${c.sub}</p>
+          <div class="counter ${countTrans()===list.length?"full":""}" id="counter">
+            えらぶ <b>${countTrans()}</b> / ${list.length}
+          </div>
+          ${list.map(w=>{
+            const opts=OPP[w]||["落ち着き","受容","希望"];
+            return `<div class="tgroup">
+              <div class="from"><b>${w}</b> を越えて</div>
+              <div class="arrow">▽</div>
+              <div class="topts">
+                ${opts.map(o=>`<button class="chip ${S.trans[w]===o?"on":""}" data-from="${w}" data-opt="${o}">${o}</button>`).join("")}
+              </div>
+            </div>`;
+          }).join("")}
+        </div>`;
+    }
+    app.innerHTML=body;
+    bindCommon();
+    if(c.mode==="select"||c.mode==="remove")bindChips(c);
+    else bindTransform();
+    renderFooterNext();
+  }
+
+  function countTrans(){return minusCore().filter(w=>S.trans[w]).length;}
+
+  function bindCommon(){
+    const b=document.getElementById("back");
+    if(b)b.onclick=()=>{
+      if(S.step===1){S.screen="intro";}
+      else{S.step--;}
+      scrollTop();render();
+    };
+  }
+
+  function bindChips(c){
+    const set=c.set();const isSel=c.mode==="select";
+    document.getElementById("grid").querySelectorAll(".chip").forEach(el=>{
+      el.onclick=()=>{
+        const w=el.dataset.w;
+        if(set.has(w))set.delete(w);
+        else{ if(set.size>=c.target)return; set.add(w); }
+        renderStep(c===STEPS[S.step]?S.step:S.step);
+      };
+    });
+  }
+
+  function bindTransform(){
+    document.querySelectorAll(".topts .chip").forEach(el=>{
+      el.onclick=()=>{S.trans[el.dataset.from]=el.dataset.opt;renderStep(7);};
+    });
+  }
+
+  function renderFooterNext(){
+    const c=STEPS[S.step];
+    let ready=false;
+    if(c.mode==="select"||c.mode==="remove")ready=c.set().size===c.target;
+    else ready=countTrans()===minusCore().length && minusCore().length>0;
+    const label=S.step===8?"結果を見る":"次へ";
+    footer.innerHTML=`<button class="btn" id="next" ${ready?"":"disabled"}>${label}</button>`;
+    document.getElementById("next").onclick=()=>{
+      const sig=sigOf(S.step);
+      if(S.sig[S.step]!==sig){S.sig[S.step]=sig;resetFrom(S.step);}
+      if(S.step===8){S.screen="result";}
+      else S.step++;
+      scrollTop();render();
+    };
+  }
+
+  function buildPrompt(){
+    const cv=coreValues();
+    const lines=cv.map((w,i)=>`${i+1}. ${w}`).join("\n");
+    return `あなたは、人の価値観をやさしく、そして構造的に読み解く伴走者です。
+
+私は「価値観の旅」というワークを通して、200近い言葉の中から、いまの自分を最も深く貫く5つの言葉を選び取りました。
+
+【最終的に残った5つの核心価値】
+${lines}
+
+【ここに至るまでの軌跡】
+・最後まで残ったプラスのエネルギー：${positiveCore().join("、")}
+・いま向き合いたい課題（マイナスのエネルギー）：${minusCore().join("、")}
+・その課題を越えるために選んだ力：${desired().join("、")}
+
+この情報をもとに、次の4つを教えてください。
+
+1. この5つの言葉が組み合わさったとき、どんな人物像・価値観の輪郭が浮かび上がるか。
+2. 「向き合いたい課題」と「越えるために選んだ力」のつながりから読み取れる、いまの私の成長のテーマ。
+3. この価値観を、日々の選択や行動にどう活かせるか。具体的な提案を3つ。
+4. 私がまだ気づいていない、もう一段深いところにある問い。
+
+断定や決めつけではなく、私自身が気づいていく余白を残しながら、あたたかい言葉で書いてください。`;
+  }
+
+  function renderResult(){
+    const cv=coreValues();
+    app.innerHTML=`
+      ${topbar()}
+      <div class="result">
+        <div class="phase">旅のおわりに</div>
+        <h2 class="title">あなたの旅が、<br>かたちになりました</h2>
+        <div class="values">
+          ${cv.map((w,i)=>`<div class="v" data-n="${KANJI[i]}" style="animation-delay:${i*0.08}s">${w}</div>`).join("")}
+        </div>
+        <div class="promptlabel">AI分析用プロンプト</div>
+        <p class="prompthint">下の文章をコピーして、ChatGPTなどのAIに貼り付けると、<br>あなただけの深い読み解きが返ってきます。</p>
+        <textarea id="prompt" readonly>${buildPrompt()}</textarea>
+      </div>`;
+    document.getElementById("back").onclick=()=>{S.screen="step";S.step=8;scrollTop();render();};
+    footer.innerHTML=`<div class="btnrow">
+      <button class="btn" id="copy">プロンプトをコピー</button>
+      <button class="btn ghost" id="restart">最初から</button>
+    </div>`;
+    document.getElementById("copy").onclick=copyPrompt;
+    document.getElementById("restart").onclick=()=>{
+      S.plusSel.clear();S.rm2.clear();S.rm3.clear();S.rm4.clear();
+      S.minusSel.clear();S.rm6.clear();S.trans={};S.finalSel.clear();S.sig={};
+      S.screen="intro";S.step=1;scrollTop();render();
+    };
+  }
+
+  function copyPrompt(){
+    const ta=document.getElementById("prompt");
+    const text=ta.value;
+    const done=()=>{const t=document.getElementById("copied");t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1600);};
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(()=>{ta.focus();ta.select();try{document.execCommand("copy");done();}catch(e){}});
+    } else {ta.focus();ta.select();try{document.execCommand("copy");done();}catch(e){}}
+  }
+
+  function scrollTop(){window.scrollTo({top:0,behavior:"instant"in window?"instant":"auto"});}
+
+  render();
+})();
+</script>
+</body>
+</html>
